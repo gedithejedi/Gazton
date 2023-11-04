@@ -21,7 +21,7 @@ import useSendNotification from "../utils/useSendNotification";
 // import Subscription from "../components/Subscription";
 import { sendNotification } from "../utils/fetchNotify";
 import { useCallback, useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
+import Preferences from '@/components/Preferences';
 // import Subscribers from "../components/Subscribers";
 
 export default function Home() {
@@ -30,8 +30,6 @@ export default function Home() {
       setAccount("");
     },
   });
-  const { chain } = useNetwork();
-  const chainId = chain?.id || "";
   const isHydrated = useIsHydrated();
 
   const projectId = process.env.NEXT_PUBLIC_PROJECT_ID as string;
@@ -57,6 +55,8 @@ export default function Home() {
     isSubscribing,
     isUnsubscribing,
   } = useManageSubscription(account);
+
+  console.log("isSubscribed: ", isSubscribed);
 
   const { signMessageAsync } = useSignMessage();
   const wagmiPublicClient = usePublicClient();
@@ -94,6 +94,7 @@ export default function Home() {
   }, [handleRegistration]);
 
   const handleSubscribe = useCallback(async () => {
+    console.log(identityKey);
     if (!identityKey) {
       await handleRegistration();
     }
@@ -164,17 +165,15 @@ export default function Home() {
           </Tooltip>
         )}
 
-        {/* {isSubscribed && (
-          <Accordion defaultIndex={[1]} allowToggle mt={10} rounded="xl">
-            <Subscription />
-            <Messages />
-            <Preferences />
-            <Subscribers />
-          </Accordion>
-        )} */}
+        {isSubscribed && (
+          // <Subscription />
+          // <Messages />
+          <Preferences />
+          // <Subscribers />
+        )}
 
         {isHydrated && address && <EventsDashboard />}
       </div>
-    </Layout>
+    </Layout >
   )
 }
