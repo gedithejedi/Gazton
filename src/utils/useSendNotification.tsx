@@ -21,6 +21,8 @@ function useSendNotification() {
         });
         console.log(account);
         console.log(notification);
+        console.log(success);
+        console.log(message);
         setIsSending(false);
         toast[success ? 'success' : 'error'](success ? notification.title : "Message failed.");
       } catch (error: any) {

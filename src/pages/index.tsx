@@ -98,7 +98,7 @@ export default function Home() {
     if (!identityKey) {
       await handleRegistration();
     }
-    await subscribe();
+    const res = await subscribe();
   }, [subscribe, identityKey])
 
   // handleSendNotification will send a notification to the current user and includes error handling.
