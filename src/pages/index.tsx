@@ -1,9 +1,6 @@
-import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { Button, Tooltip } from "antd";
-import { useAccount, useNetwork, usePublicClient, useSignMessage } from 'wagmi';
+import { useAccount, usePublicClient, useSignMessage } from 'wagmi';
 import useIsHydrated from '@/hooks/useIsHydrated';
-import EventsDashboard from '@/components/EventsDashboard';
-import { useInterval } from "usehooks-ts";
 import Layout from '@/components/Layout';
 
 import {
@@ -24,9 +21,21 @@ import { getAllSubscribers, sendNotification } from "../utils/fetchNotify";
 import { useCallback, useEffect, useState } from 'react';
 import Preferences from '@/components/Preferences';
 import toast from 'react-hot-toast';
+import Messages from '@/components/Messages';
+import Events from '@/components/Events';
+import ContractForm from '@/components/ContractForm';
 // import Subscribers from "../components/Subscribers";
 
+export interface Event {
+  eventName: string;
+  subscribed: boolean
+}
+
+export type Events = Event[];
+
 export default function Home() {
+  const [contractEvents, setContractEvents] = useState<Events>([]);
+  const [contractAddress, setContractAddres] = useState("");
   const { address, isConnecting, isDisconnected } = useAccount({
     onDisconnect: () => {
       setAccount("");
@@ -38,19 +47,18 @@ export default function Home() {
   const projectId = process.env.NEXT_PUBLIC_PROJECT_ID as string;
   const appDomain = process.env.NEXT_PUBLIC_APP_DOMAIN as string;
 
+  /** Web3Inbox SDK hooks **/
   const isW3iInitialized = useInitWeb3InboxClient({
     projectId,
     domain: appDomain,
     isLimited: process.env.NODE_ENV == "production",
   });
-
   const {
     account,
     setAccount,
     register: registerIdentity,
     identityKey,
   } = useW3iAccount();
-
   const {
     subscribe,
     unsubscribe,
@@ -59,17 +67,20 @@ export default function Home() {
     isUnsubscribing,
   } = useManageSubscription(account);
 
-  console.log("isSubscribed: ", isSubscribed);
-
   const { signMessageAsync } = useSignMessage();
   const wagmiPublicClient = usePublicClient();
+
   const { handleSendNotification, isSending } = useSendNotification();
+  const [lastBlock, setLastBlock] = useState<string>();
+  const [isBlockNotificationEnabled, setIsBlockNotificationEnabled] =
+    useState(true);
 
   const signMessage = useCallback(
     async (message: string) => {
       const res = await signMessageAsync({
         message,
       });
+
       return res as string;
     },
     [signMessageAsync]
@@ -84,8 +95,7 @@ export default function Home() {
   const handleRegistration = useCallback(async () => {
     if (!account) return;
     try {
-      const res = await registerIdentity(signMessage);
-      console.log("Register identity: ", res);
+      await registerIdentity(signMessage);
     } catch (registerIdentityError) {
       console.error({ registerIdentityError });
     }
@@ -97,11 +107,11 @@ export default function Home() {
   }, [handleRegistration]);
 
   const handleSubscribe = useCallback(async () => {
-    console.log(identityKey);
     if (!identityKey) {
       await handleRegistration();
     }
-    const res = await subscribe();
+
+    await subscribe();
   }, [subscribe, identityKey])
 
   // handleSendNotification will send a notification to the current user and includes error handling.
@@ -111,24 +121,24 @@ export default function Home() {
       handleSendNotification({
         title: "GM Hacker",
         body: "Hack it until you make it!",
-        // url: appDomain,
-        type: "6b384ff5-bf8d-4cd8-9cdb-69c7569031af",
+        icon: `${window.location.origin}/WalletConnect-blue.svg`,
+        url: window.location.origin,
+        // ID retrieved from explorer api - Copy your notification type from WalletConnect Cloud and replace the default value below
+        type: "5472094a-3ac1-4483-a861-26aef4ca05ae",
       });
     }
   }, [handleSendNotification, isSubscribed]);
 
   return (
     <Layout>
-      <div className='pt-10 gap-8 flex flex-col'>
+      <div className='pt-10 gap-5 flex flex-col'>
         {isHydrated && isConnecting && <h2>Connecting…</h2>}
         {isHydrated && isDisconnected && !address && (
           <div className='flex flex-col justify-center'>
-            <h2>Please connect your wallet</h2>
+            <h2 className='font-medium'>Please connect your wallet</h2>
             <Button type="primary" onClick={() => open()}>Open Connect Modal</Button>
           </div>
         )}
-
-        {isHydrated && address && <EventsDashboard />}
 
         {isSubscribed ? (
           <div className='flex flex-col gap-4 align-center'>
@@ -139,14 +149,6 @@ export default function Home() {
               loading={isSending}
             >
               Send test notification
-            </Button>
-            <Button
-              onClick={unsubscribe}
-              type="primary"
-              disabled={!isW3iInitialized || !account}
-              loading={isUnsubscribing}
-            >
-              Unsubscribe
             </Button>
           </div>
         ) : (
@@ -166,12 +168,22 @@ export default function Home() {
           </Tooltip>
         )}
 
-        {isSubscribed && (
-          // <Subscription />
-          // <Messages />
-          <Preferences />
-          // <Subscribers />
-        )}
+        {isHydrated && address && <div className='flex gap-5'>
+          <ContractForm setContractEvents={setContractEvents} setContractAddres={setContractAddres} />
+
+          {isSubscribed && (
+            <div className="flex flex-wrap w-1/2 bg-slate-100 justify-center gap-8">
+              <Preferences unsubscribe={unsubscribe} isW3iInitialized={isW3iInitialized} loading={isUnsubscribing} />
+            </div>
+          )}
+        </div>}
+
+        <div className="flex gap-5">
+          {!!contractEvents.length && contractAddress !== "" &&
+            <Events events={contractEvents} contractAddress={contractAddress} />}
+
+          <Messages />
+        </div>
       </div>
     </Layout >
   )

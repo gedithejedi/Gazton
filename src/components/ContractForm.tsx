@@ -1,11 +1,11 @@
-import { Events } from "./EventsDashboard";
-
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Button, Form, Input } from 'antd';
 import { FormInput } from "./FormInput";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import axios from "axios";
 import { useAccount, useNetwork } from "wagmi";
+import SectionTitle from "./SectionTitle";
+import { Events } from "@/pages";
 
 interface ContractFormProps {
   setContractEvents: Dispatch<SetStateAction<Events>>;
@@ -74,8 +74,8 @@ const ContractForm = ({ setContractEvents, setContractAddres }: ContractFormProp
   };
 
   return (
-    <div className='w-[600px] shadow p-8 rounded-xl bg-white'>
-      <h1 className='text-3xl text-center mb-6'>Your contract address</h1>
+    <div className='w-1/2 shadow p-8 rounded-xl bg-white min-h-[400px]' >
+      <SectionTitle>Your contract address</SectionTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col my-4">
           <FormInput

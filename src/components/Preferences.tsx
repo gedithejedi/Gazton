@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { BiSave } from "react-icons/bi";
 import { useForm } from "react-hook-form";
 import { useSubscriptionScopes, useW3iAccount } from "@web3inbox/widget-react";
 import toast from "react-hot-toast";
-import { Button, Collapse, Form, Switch } from "antd";
-import Panel from "antd/es/cascader/Panel";
+import { Button, Form, Switch } from "antd";
+import SectionTitle from "./SectionTitle";
+import Card from "./Card";
 
-function Preferences() {
+function Preferences({
+  unsubscribe,
+  isW3iInitialized,
+  loading
+}: {
+  unsubscribe: () => Promise<void>,
+  isW3iInitialized: boolean,
+  loading: boolean
+}) {
   const { account } = useW3iAccount();
   const { scopes, updateScopes } = useSubscriptionScopes(account);
 
@@ -39,10 +47,11 @@ function Preferences() {
   }, [scopes, setValue]);
 
   return (
-    <div className='w-[600px] shadow p-8 rounded-xl bg-white'>
-      <Form className="bg-transparent" onFinish={onSubmitPreferences}>
+    <Card className='w-[600px] shadow p-8 rounded-xl bg-white'>
+      <SectionTitle>Settings</SectionTitle>
+      <Form className="bg-transparent w-full" onFinish={onSubmitPreferences}>
         {Object.entries(scopes).map(([scopeKey, scope]) => (
-          <Form.Item key={scopeKey} label={scope.name} className="flex mb-2 justify-between">
+          <Form.Item key={scopeKey} label={scope.name} className="flex mb-2 justify-between w-full">
             <Switch
               defaultChecked={scope.enabled}
             // name={scopeKey}
@@ -52,13 +61,24 @@ function Preferences() {
         <Button
           type="primary"
           htmlType="submit"
-          shape="round"
           loading={false}  // Replace with your loading state
         >
           Save preferences
         </Button>
       </Form>
-    </div>
+
+      <div className="mt-6">
+        <Button
+          onClick={unsubscribe}
+          type="primary"
+          className="bg-red-500 hover:!bg-red-400"
+          disabled={!isW3iInitialized || !account}
+          loading={loading}
+        >
+          Unsubscribe
+        </Button>
+      </div>
+    </Card>
   );
 }
 

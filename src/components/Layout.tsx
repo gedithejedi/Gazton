@@ -16,18 +16,18 @@ const Layout = ({ children }: { children: ReactNode; }) => {
   const { chain } = useNetwork();
   const chainId = chain?.id || "";
   const { open } = useWeb3Modal();
-  const isChainSupported = useMemo(() => [5].find(chain => chain === chainId), [chainId])
+  const isChainSupported = useMemo(() => [137, 5, 1].find(chain => chain === chainId), [chainId])
 
   return (
     <main className={`bg-gray-100 flex min-h-screen flex-col items-center pb-20 ${roboto.className}`}>
       <div className="w-full bg-white shadow-sm p-4 flex justify-between">
         <p className='uppercase text-4xl m-0 p-0 h-fit'>Gazton</p>
         <div className='flex gap-3'>
-          <Button type="primary" onClick={() => open()}>{isHydrated && isDisconnected ? "Connect Wallet" : "Open Wallet Modal"}</Button>
+          <Button type="primary" onClick={() => open()}>{isHydrated && isDisconnected ? "Connect Wallet" : "My wallet"}</Button>
         </div>
       </div>
 
-      <div className='pt-10'>
+      <div className='pt-10 max-w-5xl'>
         {(isHydrated && !isChainSupported) ? (
           <div className='w-[600px] bg-white shadow p-8 rounded-xl mt-10'>
             <h2 className='text-3xl text-center mb-6'>Please make sure you are on the supported chain to use this feature</h2>
