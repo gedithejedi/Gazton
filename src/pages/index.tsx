@@ -9,6 +9,7 @@ import Layout from '@/components/Layout';
 import {
   useInitWeb3InboxClient,
   useManageSubscription,
+  useSubscription,
   useW3iAccount,
 } from "@web3inbox/widget-react";
 import "@web3inbox/widget-react/dist/compiled.css";
@@ -19,7 +20,7 @@ import useSendNotification from "../utils/useSendNotification";
 // import Preferences from "../components/Preferences";
 // import Messages from "../components/Messages";
 // import Subscription from "../components/Subscription";
-import { sendNotification } from "../utils/fetchNotify";
+import { getAllSubscribers, sendNotification } from "../utils/fetchNotify";
 import { useCallback, useEffect, useState } from 'react';
 import Preferences from '@/components/Preferences';
 import toast from 'react-hot-toast';
@@ -32,7 +33,8 @@ export default function Home() {
     },
   });
   const isHydrated = useIsHydrated();
-
+  const { subscription } = useSubscription()
+  console.log(subscription);
   const projectId = process.env.NEXT_PUBLIC_PROJECT_ID as string;
   const appDomain = process.env.NEXT_PUBLIC_APP_DOMAIN as string;
 
@@ -109,10 +111,10 @@ export default function Home() {
       handleSendNotification({
         title: "GM Hacker",
         body: "Hack it until you make it!",
-        icon: `${window.location.origin}/WalletConnect-blue.svg`,
-        url: appDomain,
+        // icon: `${window.location.origin}/WalletConnect-blue.svg`,
+        // url: appDomain,
         // ID retrieved from explorer api - Copy your notification type from WalletConnect Cloud and replace the default value below
-        type: "dc088fb8-276f-4abf-9eac-b9f0b9ae9ccd",
+        type: "5472094a-3ac1-4483-a861-26aef4ca05ae",
       });
     }
   }, [handleSendNotification, isSubscribed]);

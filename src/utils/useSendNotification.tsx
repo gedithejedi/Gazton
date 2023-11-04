@@ -13,6 +13,7 @@ function useSendNotification() {
       if (!account) {
         return;
       }
+
       setIsSending(true);
       try {
         const { success, message } = await sendNotification({
