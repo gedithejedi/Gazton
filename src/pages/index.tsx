@@ -69,7 +69,6 @@ export default function Home() {
       const res = await signMessageAsync({
         message,
       });
-
       return res as string;
     },
     [signMessageAsync]
@@ -99,7 +98,6 @@ export default function Home() {
     if (!identityKey) {
       await handleRegistration();
     }
-
     await subscribe();
   }, [subscribe, identityKey])
 
