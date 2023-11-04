@@ -39,7 +39,7 @@ function Preferences() {
   }, [scopes, setValue]);
 
   return (
-    <Collapse accordion className="p-5 my-6 bg-white">
+    <div className='w-[600px] shadow p-8 rounded-xl bg-white'>
       <Form className="bg-transparent" onFinish={onSubmitPreferences}>
         {Object.entries(scopes).map(([scopeKey, scope]) => (
           <Form.Item key={scopeKey} label={scope.name} className="flex mb-2 justify-between">
@@ -58,7 +58,7 @@ function Preferences() {
           Save preferences
         </Button>
       </Form>
-    </Collapse>
+    </div>
   );
 }
 

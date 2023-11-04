@@ -4,6 +4,7 @@ export const sendNotification = async (notificationPayload: {
   accounts: string[];
   notification: INotification;
 }) => {
+  console.log("in send notification");
   const result = await fetch("/api/notify", {
     method: "POST",
     headers: {
@@ -11,8 +12,8 @@ export const sendNotification = async (notificationPayload: {
     },
     body: JSON.stringify(notificationPayload),
   });
-
   const gmRes = await result.json();
+  console.log(gmRes);
   const { success, message } = gmRes;
 
   return { success, message };

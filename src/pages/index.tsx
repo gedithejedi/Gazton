@@ -22,6 +22,7 @@ import useSendNotification from "../utils/useSendNotification";
 import { sendNotification } from "../utils/fetchNotify";
 import { useCallback, useEffect, useState } from 'react';
 import Preferences from '@/components/Preferences';
+import toast from 'react-hot-toast';
 // import Subscribers from "../components/Subscribers";
 
 export default function Home() {
@@ -118,7 +119,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className='pt-10'>
+      <div className='pt-10 gap-8 flex flex-col'>
         {isHydrated && isConnecting && <h2>Connecting…</h2>}
         {isHydrated && isDisconnected && !address && (
           <div className='flex flex-col justify-center'>
@@ -127,7 +128,7 @@ export default function Home() {
           </div>
         )}
 
-
+        {isHydrated && address && <EventsDashboard />}
 
         {isSubscribed ? (
           <div className='flex flex-col gap-4 align-center'>
@@ -171,8 +172,6 @@ export default function Home() {
           <Preferences />
           // <Subscribers />
         )}
-
-        {isHydrated && address && <EventsDashboard />}
       </div>
     </Layout >
   )
