@@ -29,7 +29,6 @@ export const FormInput = <TFieldValues extends FieldValues = FieldValues>({
   return (
     <AntdForm.Item
       {...props}
-      // name={name}
       initialValue={field.value}
       normalize={handleNormalize}
       validateStatus={fieldState.invalid ? 'error' : undefined}
