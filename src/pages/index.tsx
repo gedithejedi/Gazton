@@ -34,7 +34,6 @@ export default function Home() {
   const chainId = chain?.id || "";
   const isHydrated = useIsHydrated();
 
-  /** Web3Inbox SDK hooks **/
   const projectId = process.env.NEXT_PUBLIC_PROJECT_ID as string;
   const appDomain = process.env.NEXT_PUBLIC_APP_DOMAIN as string;
 
@@ -43,12 +42,14 @@ export default function Home() {
     domain: appDomain,
     isLimited: process.env.NODE_ENV == "production",
   });
+
   const {
     account,
     setAccount,
     register: registerIdentity,
     identityKey,
   } = useW3iAccount();
+
   const {
     subscribe,
     unsubscribe,
@@ -59,10 +60,7 @@ export default function Home() {
 
   const { signMessageAsync } = useSignMessage();
   const wagmiPublicClient = usePublicClient();
-
   const { handleSendNotification, isSending } = useSendNotification();
-  const [lastBlock, setLastBlock] = useState<string>();
-  const [isBlockNotificationEnabled, setIsBlockNotificationEnabled] = useState(true);
 
   const signMessage = useCallback(
     async (message: string) => {
@@ -83,7 +81,8 @@ export default function Home() {
   const handleRegistration = useCallback(async () => {
     if (!account) return;
     try {
-      await registerIdentity(signMessage);
+      const res = await registerIdentity(signMessage);
+      console.log("Register identity: ", res);
     } catch (registerIdentityError) {
       console.error({ registerIdentityError });
     }
@@ -109,53 +108,12 @@ export default function Home() {
         title: "GM Hacker",
         body: "Hack it until you make it!",
         icon: `${window.location.origin}/WalletConnect-blue.svg`,
-        url: window.location.origin,
+        url: appDomain,
         // ID retrieved from explorer api - Copy your notification type from WalletConnect Cloud and replace the default value below
         type: "dc088fb8-276f-4abf-9eac-b9f0b9ae9ccd",
       });
     }
   }, [handleSendNotification, isSubscribed]);
-
-  // Example of how to send a notification based on some "automation".
-  // sendNotification will make a fetch request to /api/notify
-  const handleBlockNotification = useCallback(async () => {
-    console.log("hwreew");
-    if (isSubscribed && account && isBlockNotificationEnabled) {
-      console.log("here");
-      const blockNumber = await wagmiPublicClient.getBlockNumber();
-      if (lastBlock !== blockNumber.toString()) {
-        console.log("in here");
-        setLastBlock(blockNumber.toString());
-        try {
-          console.log("in hr again");
-          toast.success("New block");
-          await sendNotification({
-            accounts: [account], // accounts that we want to send the notification to.
-            notification: {
-              title: "New block",
-              body: blockNumber.toString(),
-              icon: `${window.location.origin}/eth-glyph-colored.png`,
-              url: `https://etherscan.io/block/${blockNumber.toString()}`,
-              type: "transactional",
-            },
-          });
-        } catch (error: any) {
-          toast.error("Failed to send new block notification. " + error.message && error.message);
-        }
-      }
-    }
-  }, [
-    wagmiPublicClient,
-    isSubscribed,
-    lastBlock,
-    account,
-    toast,
-    isBlockNotificationEnabled,
-  ]);
-
-  useInterval(() => {
-    handleBlockNotification();
-  }, 12000);
 
   return (
     <Layout>
@@ -168,41 +126,23 @@ export default function Home() {
           </div>
         )}
 
+
+
         {isSubscribed ? (
           <div className='flex flex-col gap-4 align-center'>
             <Button
               type="primary"
               onClick={handleTestNotification}
               disabled={!isW3iInitialized}
-            // colorScheme="purple"
-            // rounded="full"
-            // isLoading={isSending}
-            // loadingText="Sending..."
+              loading={isSending}
             >
               Send test notification
             </Button>
             <Button
-              // leftIcon={isBlockNotificationEnabled ? <FaPause /> : <FaPlay />}
-              type="primary"
-              onClick={() =>
-                setIsBlockNotificationEnabled((isEnabled) => !isEnabled)
-              }
-              disabled={!isW3iInitialized}
-            // colorScheme={isBlockNotificationEnabled ? "orange" : "blue"}
-            // rounded="full"
-            >
-              {isBlockNotificationEnabled ? "Pause" : "Resume"} block
-              notifications
-            </Button>
-            <Button
-              // leftIcon={<FaBellSlash />}
               onClick={unsubscribe}
               type="primary"
               disabled={!isW3iInitialized || !account}
-            // colorScheme="red"
-            // isLoading={isUnsubscribing}
-            // loadingText="Unsubscribing..."
-            // rounded="full"
+              loading={isUnsubscribing}
             >
               Unsubscribe
             </Button>
@@ -214,17 +154,10 @@ export default function Home() {
             className={`${Boolean(account) && "none"}`}
           >
             <Button
-              // leftIcon={<FaBell />}
               onClick={handleSubscribe}
               type='primary'
-            // colorScheme="cyan"
-            // rounded="full"
-            // variant="outline"
-            // w="fit-content"
-            // alignSelf="center"
-            // isLoading={isSubscribing}
-            // loadingText="Subscribing..."
-            // isDisabled={!Boolean(address) || !Boolean(account)}
+              loading={isSubscribing}
+              disabled={!Boolean(address) || !Boolean(account)}
             >
               Subscribe
             </Button>
