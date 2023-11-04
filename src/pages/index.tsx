@@ -111,10 +111,8 @@ export default function Home() {
       handleSendNotification({
         title: "GM Hacker",
         body: "Hack it until you make it!",
-        // icon: `${window.location.origin}/WalletConnect-blue.svg`,
         // url: appDomain,
-        // ID retrieved from explorer api - Copy your notification type from WalletConnect Cloud and replace the default value below
-        type: "5472094a-3ac1-4483-a861-26aef4ca05ae",
+        type: "6b384ff5-bf8d-4cd8-9cdb-69c7569031af",
       });
     }
   }, [handleSendNotification, isSubscribed]);
