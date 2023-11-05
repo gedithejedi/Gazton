@@ -18,6 +18,7 @@ import Messages from '@/components/Messages';
 import Events from '@/components/Events';
 import ContractForm from '@/components/ContractForm';
 import SectionTitle from "@/components/SectionTitle";
+import { sendTelegramMessage } from "@/utils/sendTelegramMessage";
 
 export interface Event {
   eventName: string;
@@ -151,6 +152,8 @@ export default function Home() {
               >
                 Send test notification
               </Button>
+
+              <Button onClick={() => sendTelegramMessage("Testing the bot")}>Telegram Test</Button>
             </div>
           </div>
         ) : (
