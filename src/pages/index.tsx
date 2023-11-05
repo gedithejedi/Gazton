@@ -143,7 +143,7 @@ export default function Home() {
                   <Preferences unsubscribe={unsubscribe} isW3iInitialized={isW3iInitialized} loading={isUnsubscribing} />
                 </div>
               )}
-              {/* 
+
               <Button
                 type="primary"
                 onClick={handleTestNotification}
@@ -153,7 +153,7 @@ export default function Home() {
                 Send test notification
               </Button>
 
-              <Button onClick={() => sendTelegramMessage("Testing the bot")}>Telegram Test</Button> */}
+              <Button onClick={() => sendTelegramMessage("Testing the bot")}>Telegram Test</Button>
             </div>
           </div>
         ) : (
