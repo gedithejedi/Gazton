@@ -30,10 +30,10 @@ function Messages() {
                 //   window.open(message.url, "_blank");
                 // }}
                 >
-                  <div className='flex justify-between gap-5 mr-4'>
+                  <div className='flex justify-between gap-5 mr-4 max-w-[250px]'>
                     <div className="flex flex-col">
                       <h3 className='font-bold' >{message.title}</h3>
-                      <p>{message.body}</p>
+                      <p className='break-all	'>{message.body}</p>
                     </div>
                     <div className='flex items-center w-14'>
                       <Image

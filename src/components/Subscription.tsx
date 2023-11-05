@@ -1,4 +1,4 @@
-import { Collapse, Typography } from 'antd';
+import { Collapse } from 'antd';
 import { useSubscription, useW3iAccount } from "@web3inbox/widget-react";
 import React from "react";
 import Card from './Card';

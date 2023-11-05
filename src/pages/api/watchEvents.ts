@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { Network, Alchemy } from "alchemy-sdk";
 import { AlchemySubscription } from "alchemy-sdk";
+import { sendTelegramMessage } from '@/utils/sendTelegramMessage';
 
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
 if (!projectId) {
@@ -79,7 +80,8 @@ export default function handler(
 
     const onSubscribeEventFire = (tx: any, eventName: string) => {
       if (!eventName) throw new Error("No event name found in event call.");
-      sendMessage(`The event "${eventName}" has been called in a smart contract ${address}`, eventName)
+      sendMessage(`The event has been called in a smart contract ${address}`, eventName)
+      sendTelegramMessage(`The event "${eventName}" has been called in a smart contract ${address}`);
     }
     console.log(address);
     if (subscribed) {

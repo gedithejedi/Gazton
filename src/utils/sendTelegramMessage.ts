@@ -1,5 +1,5 @@
-const TELEGRAM_TOKEN = 'AAGQ9kt_nQdy7fNVJeYmF2Rszq31SHrKyBA';
-const TELEGRAM_CHAT_ID = '6932453594';
+const TELEGRAM_TOKEN = '6361707999:AAE2beGY0rrMi4zdVlXrVFP81pKHYP6IEek';
+const TELEGRAM_CHAT_ID = '@topGGroupReally';
 
 export async function sendTelegramMessage(message: string): Promise<void> {
   const apiUrl = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`;
