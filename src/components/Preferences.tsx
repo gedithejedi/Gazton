@@ -3,8 +3,8 @@ import { useForm } from "react-hook-form";
 import { useSubscriptionScopes, useW3iAccount } from "@web3inbox/widget-react";
 import toast from "react-hot-toast";
 import { Button, Form, Switch } from "antd";
-import SectionTitle from "./SectionTitle";
 import Card from "./Card";
+import Title from "antd/es/typography/Title";
 
 function Preferences({
   unsubscribe,
@@ -47,36 +47,38 @@ function Preferences({
   }, [scopes, setValue]);
 
   return (
-    <Card className='w-[600px] shadow p-8 rounded-xl bg-white'>
-      <SectionTitle>Settings</SectionTitle>
-      <Form className="bg-transparent w-full" onFinish={onSubmitPreferences}>
-        {Object.entries(scopes).map(([scopeKey, scope]) => (
-          <Form.Item key={scopeKey} label={scope.name} className="flex mb-2 justify-between w-full">
-            <Switch
-              defaultChecked={scope.enabled}
-            // name={scopeKey}
-            />
-          </Form.Item>
-        ))}
-        <Button
-          type="primary"
-          htmlType="submit"
-          loading={false}  // Replace with your loading state
-        >
-          Save preferences
-        </Button>
-      </Form>
+    <Card className='w-full shadow p-8 rounded-xl bg-white'>
+      <Title level={4}>Settings</Title>
+      <div className="flex items-end">
+        <Form className="bg-transparent w-full" onFinish={onSubmitPreferences}>
+          {Object.entries(scopes).map(([scopeKey, scope]) => (
+            <Form.Item key={scopeKey} label={scope.name} className="flex mb-2 justify-between w-full">
+              <Switch
+                defaultChecked={scope.enabled}
+              />
+            </Form.Item>
+          ))}
+          <Button
+            className="mt-8"
+            type="primary"
+            htmlType="submit"
+            loading={false}  // Replace with your loading state
+          >
+            Save preferences
+          </Button>
+        </Form>
 
-      <div className="mt-6">
-        <Button
-          onClick={unsubscribe}
-          type="primary"
-          className="bg-red-500 hover:!bg-red-400"
-          disabled={!isW3iInitialized || !account}
-          loading={loading}
-        >
-          Unsubscribe
-        </Button>
+        <div className="mt-6">
+          <Button
+            onClick={unsubscribe}
+            type="primary"
+            className="bg-red-500 hover:!bg-red-400"
+            disabled={!isW3iInitialized || !account}
+            loading={loading}
+          >
+            Remove all events
+          </Button>
+        </div>
       </div>
     </Card>
   );

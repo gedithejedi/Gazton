@@ -15,7 +15,7 @@ function Messages() {
   return (
     <Card>
       <Title level={4} className="mb-2">Last Messages</Title>
-      <div className="overflow-y-auto max-h-[800px]">
+      <div className="overflow-y-auto max-h-[250px]">
         <div className="flex flex-col pb-4 space-y-4 relative">
           {!messages?.length ? (
             <Text>No messages yet.</Text>
@@ -31,7 +31,7 @@ function Messages() {
                 //   window.open(message.url, "_blank");
                 // }}
                 >
-                  <div className='flex justify-between gap-5'>
+                  <div className='flex justify-between gap-5 mr-4'>
                     <div className="flex flex-col">
                       <Title level={5}>{message.title}</Title>
                       <Text>{message.body}</Text>

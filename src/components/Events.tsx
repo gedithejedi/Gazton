@@ -53,7 +53,7 @@ const Events = ({ events, contractAddress }: EventsProps) => {
   };
 
   return (
-    <div className='w-1/2 shadow p-8 rounded-xl bg-white'>
+    <div className='w-full shadow p-8 rounded-xl bg-white'>
       <div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <ul>

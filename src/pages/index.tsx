@@ -1,5 +1,5 @@
 import { Button, Tooltip } from "antd";
-import { useAccount, usePublicClient, useSignMessage } from 'wagmi';
+import { useAccount, useSignMessage } from 'wagmi';
 import useIsHydrated from '@/hooks/useIsHydrated';
 import Layout from '@/components/Layout';
 
@@ -17,6 +17,7 @@ import Preferences from '@/components/Preferences';
 import Messages from '@/components/Messages';
 import Events from '@/components/Events';
 import ContractForm from '@/components/ContractForm';
+import SectionTitle from "@/components/SectionTitle";
 
 export interface Event {
   eventName: string;
@@ -60,19 +61,13 @@ export default function Home() {
   } = useManageSubscription(account);
 
   const { signMessageAsync } = useSignMessage();
-  const wagmiPublicClient = usePublicClient();
-
   const { handleSendNotification, isSending } = useSendNotification();
-  const [lastBlock, setLastBlock] = useState<string>();
-  const [isBlockNotificationEnabled, setIsBlockNotificationEnabled] =
-    useState(true);
 
   const signMessage = useCallback(
     async (message: string) => {
       const res = await signMessageAsync({
         message,
       });
-
       return res as string;
     },
     [signMessageAsync]
@@ -113,15 +108,13 @@ export default function Home() {
       handleSendNotification({
         title: "GM Hacker",
         body: "Hack it until you make it!",
-        icon: `${window.location.origin}/WalletConnect-blue.svg`,
+        icon: `${window.location.origin}/notification.png`,
         url: window.location.origin,
         // ID retrieved from explorer api - Copy your notification type from WalletConnect Cloud and replace the default value below
         type: "5472094a-3ac1-4483-a861-26aef4ca05ae",
       });
     }
   }, [handleSendNotification, isSubscribed]);
-
-  console.log(contractAddress);
 
   return (
     <Layout>
@@ -135,49 +128,51 @@ export default function Home() {
         )}
 
         {isSubscribed ? (
-          <div className='flex flex-col gap-4 align-center'>
-            <Button
-              type="primary"
-              onClick={handleTestNotification}
-              disabled={!isW3iInitialized}
-              loading={isSending}
-            >
-              Send test notification
-            </Button>
+          <div className='flex gap-5'>
+
+            {isHydrated && address && <div className='flex flex-col gap-5'>
+              <ContractForm setContractEvents={setContractEvents} setContractAddres={setContractAddres} />
+              {!!contractEvents.length && contractAddress !== "" && <Events events={contractEvents} contractAddress={contractAddress} />}
+            </div>}
+
+            <div className="flex gap-5 flex-col">
+              <Messages />
+              {isHydrated && (
+                <div className="flex flex-wrap w-full bg-slate-100 justify-center gap-8">
+                  <Preferences unsubscribe={unsubscribe} isW3iInitialized={isW3iInitialized} loading={isUnsubscribing} />
+                </div>
+              )}
+
+              <Button
+                type="primary"
+                onClick={handleTestNotification}
+                disabled={!isW3iInitialized}
+                loading={isSending}
+              >
+                Send test notification
+              </Button>
+            </div>
           </div>
         ) : (
-          <Tooltip placement="top" title={!Boolean(address)
-            ? "Connect your wallet first."
-            : "Register your account."}
-            className={`${Boolean(account) && "none"}`}
-          >
-            <Button
-              onClick={handleSubscribe}
-              type='primary'
-              loading={isSubscribing}
-              disabled={!Boolean(address) || !Boolean(account)}
+          <div className="flex flex-col items-center">
+            <SectionTitle >Click the button to enable Notifications</SectionTitle>
+            <Tooltip placement="top" title={!Boolean(address)
+              ? "Connect your wallet first."
+              : "Register your account."}
+              className={`${Boolean(account) && "none"}`}
             >
-              Subscribe
-            </Button>
-          </Tooltip>
+              <Button
+                className="mt-3 max-w-[200px]"
+                onClick={handleSubscribe}
+                type='primary'
+                loading={isSubscribing}
+                disabled={!Boolean(address) || !Boolean(account)}
+              >
+                Allow to send events
+              </Button>
+            </Tooltip>
+          </div>
         )}
-
-        {isHydrated && address && <div className='flex gap-5'>
-          <ContractForm setContractEvents={setContractEvents} setContractAddres={setContractAddres} />
-
-          {isSubscribed && (
-            <div className="flex flex-wrap w-1/2 bg-slate-100 justify-center gap-8">
-              <Preferences unsubscribe={unsubscribe} isW3iInitialized={isW3iInitialized} loading={isUnsubscribing} />
-            </div>
-          )}
-        </div>}
-
-        <div className="flex gap-5">
-          {!!contractEvents.length && contractAddress !== "" &&
-            <Events events={contractEvents} contractAddress={contractAddress} />}
-
-          <Messages />
-        </div>
       </div>
     </Layout >
   )

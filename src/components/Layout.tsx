@@ -4,6 +4,7 @@ import { Button } from 'antd';
 import React, { ReactNode, useMemo } from 'react'
 import { useAccount, useNetwork } from 'wagmi';
 import { useWeb3Modal } from '@web3modal/wagmi/react';
+import SectionTitle from './SectionTitle';
 
 const roboto = Roboto({
   weight: '400',
@@ -26,15 +27,15 @@ const Layout = ({ children }: { children: ReactNode; }) => {
           <Button
             type="default"
             className='round'
-            onClick={() => open()}>{isHydrated && isDisconnected ? "Connect Wallet" : address}
+            onClick={() => open()}>{isHydrated && isDisconnected ? "Connect Wallet" : "Switch Network"}
           </Button>
         </div>
       </div>
 
-      <div className='pt-10 max-w-5xl min-w-5xl'>
+      <div className=' max-w-5xl min-w-5xl'>
         {(isHydrated && !isChainSupported) ? (
           <div className='w-[600px] bg-white shadow p-8 rounded-xl mt-10'>
-            <h2 className='text-3xl text-center mb-6'>Please make sure you are on the supported chain to use this feature</h2>
+            <SectionTitle>Please make sure you have your wallet connected and are on the supported chain to use this feature</SectionTitle>
           </div>)
           : children
         }

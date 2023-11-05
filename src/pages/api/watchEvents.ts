@@ -45,7 +45,7 @@ const sendMessage = async (message: string, eventName: string) => {
             type: "5472094a-3ac1-4483-a861-26aef4ca05ae",
             title: `Event ${eventName} was executed`,
             body: message,
-            icon: `https://gazton.vercel.app/WalletConnect-blue.svg`,
+            icon: `https://gazton.vercel.app/notification.png`,
             url: "https://gazton.vercel.app/",
           },
           accounts: [

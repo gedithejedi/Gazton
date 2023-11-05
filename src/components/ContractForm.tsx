@@ -6,6 +6,8 @@ import axios from "axios";
 import { useAccount, useNetwork } from "wagmi";
 import SectionTitle from "./SectionTitle";
 import { Events } from "@/pages";
+import toast from "react-hot-toast";
+import Title from "antd/es/typography/Title";
 
 interface ContractFormProps {
   setContractEvents: Dispatch<SetStateAction<Events>>;
@@ -56,8 +58,11 @@ const ContractForm = ({ setContractEvents, setContractAddres }: ContractFormProp
     if (!address) return console.error("Something went wrong getting account address.")
     try {
       const contractAbi = await fetchContractAbi(address);
-      console.log(contractAbi)
-      if (!contractAbi) throw new Error("Error fetching contract data, please check the address.");
+
+      if (!contractAbi) {
+        toast.error("Error fetching contract data, please check the address.")
+        throw new Error("Error fetching contract data, please check the address.");
+      }
 
       let eventArray = contractAbi.reduce((events: Events, current: typeof contractAbi) => {
         if (current.type == "event") {
@@ -75,14 +80,14 @@ const ContractForm = ({ setContractEvents, setContractAddres }: ContractFormProp
   };
 
   return (
-    <div className='w-full shadow p-8 rounded-xl bg-white min-h-[400px]' >
-      <SectionTitle>Your contract address</SectionTitle>
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <div className='w-full shadow py-4 px-4 rounded-xl bg-white' >
+      <Title level={4} className="mb-2">Your contract address</Title>
+      <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
         <div className="flex flex-col my-4">
           <FormInput
             control={control}
             name="address"
-            label="Contract address"
+            label=""
             help="the address of the smart contract that you want to get notified on."
           >
             <Input
@@ -93,7 +98,7 @@ const ContractForm = ({ setContractEvents, setContractAddres }: ContractFormProp
             />
           </FormInput>
         </div>
-        <div className="flex justify-center mt-8">
+        <div className="flex mt-4">
           <Form.Item className="">
             <Button htmlType='submit' type="primary" className="h-9 w-52">Get contract events</Button>
           </Form.Item>
