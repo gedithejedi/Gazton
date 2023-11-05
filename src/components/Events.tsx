@@ -5,6 +5,8 @@ import { Button, Form } from 'antd';
 import { useForm, SubmitHandler, useFieldArray } from "react-hook-form";
 import { Switch } from "antd";
 import { useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 interface EventsFormData {
   events: EventsType;
@@ -36,18 +38,18 @@ const Events = ({ events, contractAddress }: EventsProps) => {
   const onSubmit: SubmitHandler<EventsFormData> = async (data) => {
     if (!data.events.length) throw new Error("No events found in the events table.")
     console.log(data);
-    // setLoading(true)
-    // try {
-    //   const headers = { "Content-Type": "application/json" };
-    //   const response = await axios.post("/api/watchForEvents", { events: data.events, address: contractAddress }, { headers });
-    //   console.log(response);
-    //   toast.success("Great Success! Your settings have been saved.");
-    // } catch (error: any) {
-    //   toast.error("Something went wrong saving your settings.")
-    //   console.error(error.message);
-    // } finally {
-    //   setLoading(false)
-    // }
+    setLoading(true)
+    try {
+      const headers = { "Content-Type": "application/json" };
+      const response = await axios.post("/api/watchEvents", { events: data.events, address: contractAddress }, { headers });
+      console.log(response);
+      toast.success("Great Success! Your settings have been saved.");
+    } catch (error: any) {
+      toast.error("Something went wrong saving your settings.")
+      console.error(error.message);
+    } finally {
+      setLoading(false)
+    }
   };
 
   return (

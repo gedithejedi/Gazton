@@ -11,7 +11,7 @@ const roboto = Roboto({
 });
 
 const Layout = ({ children }: { children: ReactNode; }) => {
-  const { isDisconnected } = useAccount();
+  const { isDisconnected, address } = useAccount();
   const isHydrated = useIsHydrated();
   const { chain } = useNetwork();
   const chainId = chain?.id || "";
@@ -23,11 +23,15 @@ const Layout = ({ children }: { children: ReactNode; }) => {
       <div className="w-full bg-white shadow-sm p-4 flex justify-between">
         <p className='uppercase text-4xl m-0 p-0 h-fit'>Gazton</p>
         <div className='flex gap-3'>
-          <Button type="primary" onClick={() => open()}>{isHydrated && isDisconnected ? "Connect Wallet" : "My wallet"}</Button>
+          <Button
+            type="default"
+            className='round'
+            onClick={() => open()}>{isHydrated && isDisconnected ? "Connect Wallet" : address}
+          </Button>
         </div>
       </div>
 
-      <div className='pt-10 max-w-5xl'>
+      <div className='pt-10 max-w-5xl min-w-5xl'>
         {(isHydrated && !isChainSupported) ? (
           <div className='w-[600px] bg-white shadow p-8 rounded-xl mt-10'>
             <h2 className='text-3xl text-center mb-6'>Please make sure you are on the supported chain to use this feature</h2>

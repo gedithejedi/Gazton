@@ -2,15 +2,24 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { Network, Alchemy } from "alchemy-sdk";
 import { AlchemySubscription } from "alchemy-sdk";
 
+const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
+if (!projectId) {
+  throw new Error("You need to provide NEXT_PUBLIC_PROJECT_ID env variable");
+}
 export interface Event {
   eventName: string;
   subscribed: boolean
 }
 
 const settings = {
-  apiKey: process.env.ALCHEMY,
+  apiKey: process.env.ALCHEMY_GOERLI,
   network: Network.ETH_GOERLI,
 };
+
+const notifyApiSecret = process.env.NOTIFY_API_SECRET;
+if (!notifyApiSecret) {
+  throw new Error("You need to provide NOTIFY_API_SECRET env variable");
+}
 
 const alchemy = new Alchemy(settings);
 
@@ -19,21 +28,38 @@ type ResData = {
   message?: string;
 }
 
-const sendXMTPMessage = async (message: string) => {
+const sendMessage = async (message: string, eventName: string) => {
   console.log("message");
   console.log(message);
-  // if (!process.env.NEXT_PUBLIC_ACC2_PK) return console.error("No secondary wallet PK provided");
-  // try {
-  //   const provider = new ethers.providers.JsonRpcProvider(process.env.GOERLI_RPC_URL || "");
-  //   const signer = new ethers.Wallet(process.env.NEXT_PUBLIC_ACC2_PK, provider);
-  //   const xmtp = await Client.create(signer, { env: "production" });
-  //   const conversation = await xmtp.conversations.newConversation(
-  //     address,
-  //   );
-  //   conversation.send(message);
-  // } catch (err) {
-  //   console.error(err);
-  // }
+  try {
+    const result = await fetch(
+      `https://notify.walletconnect.com/${projectId}/notify`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${notifyApiSecret}`,
+        },
+        body: JSON.stringify({
+          notification: {
+            type: "5472094a-3ac1-4483-a861-26aef4ca05ae",
+            title: `Event ${eventName} was executed`,
+            body: message,
+            icon: `https://gazton.vercel.app/WalletConnect-blue.svg`,
+            url: "https://gazton.vercel.app/",
+          },
+          accounts: [
+            'eip155:1:0xB3622628546DE921A70945ffB51811725FbDA109' // TODO: change to be more flexible
+          ]
+        }),
+      }
+    );
+
+    const gmRes = await result.json();
+    console.log(gmRes);
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 export default function handler(
@@ -53,9 +79,9 @@ export default function handler(
 
     const onSubscribeEventFire = (tx: any, eventName: string) => {
       if (!eventName) throw new Error("No event name found in event call.");
-      sendXMTPMessage(`The event "${eventName}" has been called in a smart contract ${address}`)
+      sendMessage(`The event "${eventName}" has been called in a smart contract ${address}`, eventName)
     }
-
+    console.log(address);
     if (subscribed) {
       console.log("sub", eventName);
       alchemy.ws.on(
@@ -69,8 +95,12 @@ export default function handler(
           includeRemoved: true,
           hashesOnly: false,
         },
-        (tx) => onSubscribeEventFire(tx, eventName),
+        (tx) => {
+          console.log(`"the event ${eventName} has fired`);
+          onSubscribeEventFire(tx, eventName)
+        },
       );
+
     } else {
       console.log("unsub", eventName);
     }

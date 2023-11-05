@@ -25,6 +25,7 @@ const ContractForm = ({ setContractEvents, setContractAddres }: ContractFormProp
   const {
     handleSubmit,
     control,
+    setValue
   } = useForm<Inputs>({
     defaultValues: {
       address: "0xFC7a12466Bb3CF346360A3d1a673573d8D1CD752"
@@ -74,7 +75,7 @@ const ContractForm = ({ setContractEvents, setContractAddres }: ContractFormProp
   };
 
   return (
-    <div className='w-1/2 shadow p-8 rounded-xl bg-white min-h-[400px]' >
+    <div className='w-full shadow p-8 rounded-xl bg-white min-h-[400px]' >
       <SectionTitle>Your contract address</SectionTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col my-4">
@@ -84,7 +85,12 @@ const ContractForm = ({ setContractEvents, setContractAddres }: ContractFormProp
             label="Contract address"
             help="the address of the smart contract that you want to get notified on."
           >
-            <Input className="w-full" placeholder="0xFC7a12466Bb3CF346360A3d1a673573d8D1CD752" required />
+            <Input
+              className="w-full"
+              placeholder="0xFC7a12466Bb3CF346360A3d1a673573d8D1CD752"
+              required
+              onChange={(e) => setValue("address", e.target.value)}
+            />
           </FormInput>
         </div>
         <div className="flex justify-center mt-8">

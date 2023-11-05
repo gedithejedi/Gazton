@@ -11,20 +11,12 @@ import {
 } from "@web3inbox/widget-react";
 import "@web3inbox/widget-react/dist/compiled.css";
 
-// import { FaBell, FaBellSlash, FaPause, FaPlay } from "react-icons/fa";
-// import { BsSendFill } from "react-icons/bs";
 import useSendNotification from "../utils/useSendNotification";
-// import Preferences from "../components/Preferences";
-// import Messages from "../components/Messages";
-// import Subscription from "../components/Subscription";
-import { getAllSubscribers, sendNotification } from "../utils/fetchNotify";
 import { useCallback, useEffect, useState } from 'react';
 import Preferences from '@/components/Preferences';
-import toast from 'react-hot-toast';
 import Messages from '@/components/Messages';
 import Events from '@/components/Events';
 import ContractForm from '@/components/ContractForm';
-// import Subscribers from "../components/Subscribers";
 
 export interface Event {
   eventName: string;
@@ -128,6 +120,8 @@ export default function Home() {
       });
     }
   }, [handleSendNotification, isSubscribed]);
+
+  console.log(contractAddress);
 
   return (
     <Layout>

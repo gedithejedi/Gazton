@@ -31,18 +31,21 @@ function Messages() {
                 //   window.open(message.url, "_blank");
                 // }}
                 >
-                  <div className='flex justify-between'>
+                  <div className='flex justify-between gap-5'>
                     <div className="flex flex-col">
                       <Title level={5}>{message.title}</Title>
                       <Text>{message.body}</Text>
                     </div>
-                    <Image
-                      preview={false}
-                      src={message.icon}
-                      alt="notification image"
-                      height={60}
-                      className="rounded-full self-center"
-                    />
+                    <div className='flex items-center w-14'>
+                      <Image
+                        preview={false}
+                        src={message.icon}
+                        alt="notification image"
+                        height={56}
+                        width={56}
+                        className="rounded-full self-center"
+                      />
+                    </div>
                     <Button
                       className="delete-btn text-base absolute top-1 right-1"
                       type="text"
