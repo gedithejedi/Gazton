@@ -4,7 +4,7 @@ import { useSubscriptionScopes, useW3iAccount } from "@web3inbox/widget-react";
 import toast from "react-hot-toast";
 import { Button, Form, Switch } from "antd";
 import Card from "./Card";
-import Title from "antd/es/typography/Title";
+import SectionTitle from "./SectionTitle";
 
 function Preferences({
   unsubscribe,
@@ -47,8 +47,8 @@ function Preferences({
   }, [scopes, setValue]);
 
   return (
-    <Card className='w-full shadow p-8 rounded-xl bg-white'>
-      <Title level={4}>Settings</Title>
+    <Card className='w-full shadow p-4 rounded-xl bg-white'>
+      <SectionTitle >Settings</SectionTitle>
       <div className="flex items-end">
         <Form className="bg-transparent w-full" onFinish={onSubmitPreferences}>
           {Object.entries(scopes).map(([scopeKey, scope]) => (

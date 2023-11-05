@@ -5,8 +5,7 @@ import { toast } from 'react-hot-toast';
 import Card from './Card';
 import { Card as ChatCard } from "antd";
 import { AiOutlineClose } from 'react-icons/ai';
-
-const { Text, Title } = Typography;
+import SectionTitle from './SectionTitle';
 
 function Messages() {
   const { account } = useW3iAccount();
@@ -14,11 +13,11 @@ function Messages() {
 
   return (
     <Card>
-      <Title level={4} className="mb-2">Last Messages</Title>
+      <SectionTitle className="mb-2">Last Messages</SectionTitle>
       <div className="overflow-y-auto max-h-[250px]">
         <div className="flex flex-col pb-4 space-y-4 relative">
           {!messages?.length ? (
-            <Text>No messages yet.</Text>
+            <p>No messages yet.</p>
           ) : (
             messages
               .sort((a, b) => b.id - a.id)
@@ -33,8 +32,8 @@ function Messages() {
                 >
                   <div className='flex justify-between gap-5 mr-4'>
                     <div className="flex flex-col">
-                      <Title level={5}>{message.title}</Title>
-                      <Text>{message.body}</Text>
+                      <h3 className='font-bold' >{message.title}</h3>
+                      <p>{message.body}</p>
                     </div>
                     <div className='flex items-center w-14'>
                       <Image
@@ -47,8 +46,8 @@ function Messages() {
                       />
                     </div>
                     <Button
-                      className="delete-btn text-base absolute top-1 right-1"
-                      type="text"
+                      className="delete-btn p-base absolute top-1 right-1"
+                      type='text'
                       icon={<AiOutlineClose />}
                       onClick={(e) => {
                         e.stopPropagation();

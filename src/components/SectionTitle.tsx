@@ -1,7 +1,8 @@
 import { ReactNode } from 'react'
+import { twMerge } from 'tailwind-merge'
 
-const SectionTitle = ({ children }: { children: ReactNode }) => {
-  return <h1 className="text-xl font-semibold text-gray-800">{children}</h1>;
+const SectionTitle = ({ children, className }: { children: ReactNode, className?: string }) => {
+  return <h1 className={twMerge("text-xl font-extrabold text-gray-800", className)}>{children}</h1>;
 };
 
 export default SectionTitle

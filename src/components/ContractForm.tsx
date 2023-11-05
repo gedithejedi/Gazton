@@ -1,13 +1,12 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Button, Form, Input } from 'antd';
 import { FormInput } from "./FormInput";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import axios from "axios";
 import { useAccount, useNetwork } from "wagmi";
-import SectionTitle from "./SectionTitle";
 import { Events } from "@/pages";
 import toast from "react-hot-toast";
-import Title from "antd/es/typography/Title";
+import SectionTitle from "./SectionTitle";
 
 interface ContractFormProps {
   setContractEvents: Dispatch<SetStateAction<Events>>;
@@ -81,7 +80,7 @@ const ContractForm = ({ setContractEvents, setContractAddres }: ContractFormProp
 
   return (
     <div className='w-full shadow py-4 px-4 rounded-xl bg-white' >
-      <Title level={4} className="mb-2">Your contract address</Title>
+      <SectionTitle className="mb-2">Your contract address</SectionTitle>
       <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
         <div className="flex flex-col my-4">
           <FormInput

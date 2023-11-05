@@ -2,9 +2,9 @@ import { Collapse, Typography } from 'antd';
 import { useSubscription, useW3iAccount } from "@web3inbox/widget-react";
 import React from "react";
 import Card from './Card';
+import SectionTitle from './SectionTitle';
 
 const { Panel } = Collapse;
-const { Title } = Typography;
 
 function Subscription() {
   const { account } = useW3iAccount();
@@ -12,9 +12,9 @@ function Subscription() {
 
   return (
     <Card className='w-1/2'>
-      <Title level={4} className="mb-2">
+      <SectionTitle className="mb-2">
         Subscriptions
-      </Title>
+      </SectionTitle>
       <div className="pb-4">
         <div
           className="w-full max-w-lg md:max-w-full"
